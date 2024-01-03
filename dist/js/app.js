@@ -2,12 +2,14 @@ import { select, settings, classNames, templates } from "./settings.js";
 import Product from "./components/product.js";
 import Cart from "./components/Cart.js";
 import Booking from "./components/Booking.js";
+import Home from "./components/Home.js";
 
   const app = {
     initPages: function(){
       const thisApp = this;
       thisApp.pages = document.querySelector(select.containerOf.pages).children;
       thisApp.navLinks = document.querySelectorAll(select.nav.links); 
+      thisApp.navhome = document.querySelectorAll(select.containerOf.navhome);
       const idFromHash = window.location.hash.replace('#/', '');
 
 
@@ -25,6 +27,19 @@ import Booking from "./components/Booking.js";
       for(let link of thisApp.navLinks){
         link.addEventListener('click', function(event){
           const clickedElement = this;
+          event.preventDefault();
+
+          const id = clickedElement.getAttribute('href').replace('#','');
+          thisApp.activatePage(id);
+
+          window.location.hash = '#/'+ id;
+        })
+      }
+
+      for(let nav of thisApp.navhome){
+        nav.addEventListener('click', function(event){
+          const clickedElement = this;
+          console.log(clickedElement);
           event.preventDefault();
 
           const id = clickedElement.getAttribute('href').replace('#','');
@@ -101,6 +116,13 @@ import Booking from "./components/Booking.js";
       thisApp.booking = new Booking(bookingContainer);
     },
 
+    initHome: function(){
+      const thisApp=this;
+      const homeElem = document.querySelector(select.containerOf.home);
+
+      thisApp.homeContainer = new Home(homeElem);
+    },
+
     init: function(){
       const thisApp = this;
       console.log('*** App starting ***');
@@ -109,6 +131,7 @@ import Booking from "./components/Booking.js";
       console.log('settings:', settings);
       console.log('templates:', templates);
 
+      thisApp.initHome();
       thisApp.initPages();
       thisApp.initData();
       thisApp.initCart();
